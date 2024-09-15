@@ -8,7 +8,7 @@
           <label class="form-check-label" for="gridCheck">Marque para ver todos boletos. </label>
         </div>
         <div class="text-end col">
-          <button type="button" class="btn btn-success m-1" title="Adicionar novo Boleto" data-bs-toggle="modal" data-bs-target="#boletoModal"> + Novo Boleto</button>
+          <button type="button" class="btn btn-success m-1" title="Adicionar novo Boleto" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> + Novo Boleto</button>
         </div>
       </div>
       <table class="table table-hover">
@@ -30,14 +30,11 @@
             <td>R$ 160,00</td>
             <td>Pago</td>
             <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar">
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <span class="material-symbols-outlined">edit_document</span>
               </button>
               <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
                 <span class="material-symbols-outlined">delete</span>
-              </button>
-              <button type="button" class="btn btn-info p-1 me-1" title="Alterar Status">
-                <span class="material-symbols-outlined">done_outline</span>
               </button>
             </td>
           </tr>
@@ -48,14 +45,11 @@
             <td>R$ 100,00</td>
             <td>Pago</td>
             <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar">
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <span class="material-symbols-outlined">edit_document</span>
               </button>
               <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
                 <span class="material-symbols-outlined">delete</span>
-              </button>
-              <button type="button" class="btn btn-info p-1 me-1" title="Alterar Status">
-                <span class="material-symbols-outlined">done_outline</span>
               </button>
             </td>
           </tr>
@@ -66,14 +60,11 @@
             <td>R$ 350,00</td>
             <td>Aguardando pagamento</td>
             <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar">
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <span class="material-symbols-outlined">edit_document</span>
               </button>
               <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
                 <span class="material-symbols-outlined">delete</span>
-              </button>
-              <button type="button" class="btn btn-info p-1 me-1" title="Alterar Status">
-                <span class="material-symbols-outlined">done_outline</span>
               </button>
             </td>
           </tr>
@@ -84,14 +75,11 @@
             <td>R$ 650,00</td>
             <td>Vencido</td>
             <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar">
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <span class="material-symbols-outlined">edit_document</span>
               </button>
               <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
                 <span class="material-symbols-outlined">delete</span>
-              </button>
-              <button type="button" class="btn btn-info p-1 me-1" title="Alterar Status">
-                <span class="material-symbols-outlined">done_outline</span>
               </button>
             </td>
           </tr>
@@ -102,36 +90,48 @@
   </div>  
 </div>
 
-
-<!-- Button to Open the Modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-  Open modal
-</button>
-
-<!-- The Modal -->
-<div class="modal" id="myModal">
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-
-      <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Modal Heading</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Cadastro Boletos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-
-      <!-- Modal body -->
       <div class="modal-body">
-        Modal body..
-      </div>
 
-      <!-- Modal footer -->
+        <div class="mb-3">
+          <label for="descricao" class="form-label">Descrição</label>
+          <input type="text" class="form-control" id="descricao" placeholder="Informe a descrição">
+        </div>
+
+        <div class="mb-3">
+          <label for="vencimento" class="form-label">Vencimento</label>
+          <input type="date" class="form-control" id="vencimento" placeholder="Another input placeholder">
+        </div>
+
+        <div class="mb-3">
+          <label for="valor" class="form-label">Valor</label>
+          <input type="text" class="form-control" id="valor" placeholder="Informe o valor">
+        </div>
+
+        <div class="mb-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-control">
+             <option disabled selected>Selecione uma opção</option>
+             <option>Pago</option>
+             <option>Aguardando pagamento</option>
+             <option>Vencido</option>
+          </select>
+        </div>
+
+      </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Salvar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
       </div>
-
     </div>
   </div>
 </div>
-
 
 
