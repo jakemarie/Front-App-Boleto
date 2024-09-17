@@ -85,7 +85,9 @@
           </tr>
         </tbody>
       </table>
-      
+      <div class="text-end col">
+       <p><span class="h6">Valor total: </span><span>R$ 200,00</span></p>
+      </div>
     </div>
   </div>  
 </div>
@@ -100,36 +102,39 @@
       </div>
       <div class="modal-body">
 
-        <div class="mb-3">
-          <label for="descricao" class="form-label">Descrição</label>
-          <input type="text" class="form-control" id="descricao" placeholder="Informe a descrição">
-        </div>
+        <form [ngClass]="{'was-validated': boletoForm.invalid}" [formGroup]="boletoForm" (ngSubmit)="salvarBoletos()">
 
-        <div class="mb-3">
-          <label for="vencimento" class="form-label">Vencimento</label>
-          <input type="date" class="form-control" id="vencimento" placeholder="Another input placeholder">
-        </div>
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição:</label>
+            <input formControlName="descricao" type="text" class="form-control" id="descricao" name="descricao" placeholder="Informe a descrição" required>
+          </div>
+  
+          <div class="mb-3">
+            <label for="vencimento" class="form-label">Vencimento:</label>
+            <input formControlName="vencimento" required type="date" min="2024-09-15" class="form-control" id="vencimento" placeholder="Another input placeholder">
+          </div>
+  
+          <div class="mb-3">
+            <label for="valor" class="form-label">Valor:</label>
+            <input formControlName="valor" required currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" type="text" class="form-control" id="valor" placeholder="Informe o valor">
+          </div>
+  
+          <div class="mb-3">
+            <label for="status" class="form-label">Status:</label>
+            <select class="form-control" required formControlName="status" id="status" name="status">
+               <option value="" disabled selected>Selecione uma opção</option>
+               <option value="0">Pago</option>
+               <option value="1">Aguardando pagamento</option>
+               <option value="2">Vencido</option>
+            </select>
+          </div>
 
-        <div class="mb-3">
-          <label for="valor" class="form-label">Valor</label>
-          <input type="text" class="form-control" id="valor" placeholder="Informe o valor">
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
         </div>
-
-        <div class="mb-3">
-          <label for="status" class="form-label">Status</label>
-          <select class="form-control">
-             <option disabled selected>Selecione uma opção</option>
-             <option>Pago</option>
-             <option>Aguardando pagamento</option>
-             <option>Vencido</option>
-          </select>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Salvar</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-      </div>
+      </form>
+        
     </div>
   </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-boleto',
@@ -7,9 +8,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoletoComponent implements OnInit {
 
-  constructor() { }
+  boletoForm = this.fb.group(
+    {
+      descricao: [null, Validators.required],
+      vencimento: [null, Validators.required],
+      valor: [null, Validators.required],
+      status: new FormControl('')
+    }
+  )
+
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
   }
+
+  salvarBoletos() {
+    if(this.boletoForm.valid) {
+      console.log(this.boletoForm)
+    } else {
+      console.log("Formulario inválido")
+      console.log(this.boletoForm.value)
+      return;
+    }
+    
+  }
+  
 
 }
