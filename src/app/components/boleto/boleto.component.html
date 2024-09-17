@@ -1,0 +1,142 @@
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="card" style="width: 95%;">
+    <div class="card-body">
+      <h3 class="card-title text-center mt-0 m-4">Boletos Diários</h3>
+      <div class="row">
+        <div class="text-start col mt-2">
+          <input class="form-check-input me-1 border border-black" type="checkbox" id="gridCheck">
+          <label class="form-check-label" for="gridCheck">Marque para ver todos boletos. </label>
+        </div>
+        <div class="text-end col">
+          <button type="button" class="btn btn-success m-1" title="Adicionar novo Boleto" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> + Novo Boleto</button>
+        </div>
+      </div>
+      <table class="table table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col" class="w-50">Descrição</th>
+            <th scope="col">Vencimento</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Status</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Internet</td>
+            <td>16/09/2024</td>
+            <td>R$ 160,00</td>
+            <td>Pago</td>
+            <td class="text-end p-1"> 
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <span class="material-symbols-outlined">edit_document</span>
+              </button>
+              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Pensão</td>
+            <td>19/09/2024</td>
+            <td>R$ 100,00</td>
+            <td>Pago</td>
+            <td class="text-end p-1"> 
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <span class="material-symbols-outlined">edit_document</span>
+              </button>
+              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Cartão</td>
+            <td>30/09/2024</td>
+            <td>R$ 350,00</td>
+            <td>Aguardando pagamento</td>
+            <td class="text-end p-1"> 
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <span class="material-symbols-outlined">edit_document</span>
+              </button>
+              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Supermercado</td>
+            <td>14/09/2024</td>
+            <td>R$ 650,00</td>
+            <td>Vencido</td>
+            <td class="text-end p-1"> 
+              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <span class="material-symbols-outlined">edit_document</span>
+              </button>
+              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-end col">
+       <p><span class="h6">Valor total: </span><span>R$ 200,00</span></p>
+      </div>
+    </div>
+  </div>  
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Cadastro Boletos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form [ngClass]="{'was-validated': boletoForm.invalid}" [formGroup]="boletoForm" (ngSubmit)="salvarBoletos()">
+
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição:</label>
+            <input formControlName="descricao" type="text" class="form-control" id="descricao" name="descricao" placeholder="Informe a descrição" required>
+          </div>
+  
+          <div class="mb-3">
+            <label for="vencimento" class="form-label">Vencimento:</label>
+            <input formControlName="vencimento" required type="date" min="2024-09-15" class="form-control" id="vencimento" placeholder="Another input placeholder">
+          </div>
+  
+          <div class="mb-3">
+            <label for="valor" class="form-label">Valor:</label>
+            <input formControlName="valor" required currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" type="text" class="form-control" id="valor" placeholder="Informe o valor">
+          </div>
+  
+          <div class="mb-3">
+            <label for="status" class="form-label">Status:</label>
+            <select class="form-control" required formControlName="status" id="status" name="status">
+               <option value="" disabled selected>Selecione uma opção</option>
+               <option value="0">Pago</option>
+               <option value="1">Aguardando pagamento</option>
+               <option value="2">Vencido</option>
+            </select>
+          </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+        
+    </div>
+  </div>
+</div>
+
+
