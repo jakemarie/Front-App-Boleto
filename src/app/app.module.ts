@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BoletoComponent } from './components/boleto/boleto.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -18,7 +19,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     CurrencyMaskModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
