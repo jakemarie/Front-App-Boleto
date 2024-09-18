@@ -23,12 +23,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr class="table-success" *ngFor="let boleto of boletoList">
             <th scope="row">1</th>
-            <td>Internet</td>
-            <td>16/09/2024</td>
-            <td>R$ 160,00</td>
-            <td>Pago</td>
+            <td>{{boleto.descricao}}</td>
+            <td>{{boleto.vencimento | date:'dd/MM/yyyy'}}</td>
+            <td>{{boleto.valor | currency:'R$ '}}</td>
+            <td>{{boleto.status}}</td>
             <td class="text-end p-1"> 
               <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <span class="material-symbols-outlined">edit_document</span>
@@ -38,51 +38,7 @@
               </button>
             </td>
           </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Pensão</td>
-            <td>19/09/2024</td>
-            <td>R$ 100,00</td>
-            <td>Pago</td>
-            <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                <span class="material-symbols-outlined">edit_document</span>
-              </button>
-              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Cartão</td>
-            <td>30/09/2024</td>
-            <td>R$ 350,00</td>
-            <td>Aguardando pagamento</td>
-            <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                <span class="material-symbols-outlined">edit_document</span>
-              </button>
-              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">4</th>
-            <td>Supermercado</td>
-            <td>14/09/2024</td>
-            <td>R$ 650,00</td>
-            <td>Vencido</td>
-            <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                <span class="material-symbols-outlined">edit_document</span>
-              </button>
-              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-            </td>
-          </tr>
+
         </tbody>
       </table>
       <div class="text-end col">
@@ -111,7 +67,7 @@
   
           <div class="mb-3">
             <label for="vencimento" class="form-label">Vencimento:</label>
-            <input formControlName="vencimento" required type="date" min="2024-09-15" class="form-control" id="vencimento" placeholder="Another input placeholder">
+            <input formControlName="vencimento" required type="date" min="{{dataAtual}}" class="form-control" id="vencimento" placeholder="Another input placeholder">
           </div>
   
           <div class="mb-3">
