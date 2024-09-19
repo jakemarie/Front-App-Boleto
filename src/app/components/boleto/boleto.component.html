@@ -4,8 +4,8 @@
       <h3 class="card-title text-center mt-0 m-4">Boletos Diários</h3>
       <div class="row">
         <div class="text-start col mt-2">
-          <input class="form-check-input me-1 border border-black" type="checkbox" id="gridCheck">
-          <label class="form-check-label" for="gridCheck">Marque para ver todos boletos. </label>
+          <input (click)="alternarBuscarBoletos($event)" class="form-check-input me-1 border border-black" type="checkbox" id="gridCheck" name="gridCheck">
+          <label class="form-check-label" for="gridCheck">{{labelChecked}}</label>
         </div>
         <div class="text-end col">
           <button type="button" class="btn btn-success m-1" title="Adicionar novo Boleto" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> + Novo Boleto</button>
@@ -23,11 +23,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="table-success" *ngFor="let boleto of boletoList">
-            <th scope="row">1</th>
+          <tr class="{{corStatusTable(boleto.status)}}" *ngFor="let boleto of boletoList">
+            <th scope="row">{{boleto.id}}</th>
             <td>{{boleto.descricao}}</td>
             <td>{{boleto.vencimento | date:'dd/MM/yyyy'}}</td>
-            <td>{{boleto.valor | currency:'R$ '}}</td>
+            <td>R$ {{converteMoeda(boleto.valor)}}</td>
             <td>{{boleto.status}}</td>
             <td class="text-end p-1"> 
               <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -42,7 +42,7 @@
         </tbody>
       </table>
       <div class="text-end col">
-       <p><span class="h6">Valor total: </span><span>R$ 200,00</span></p>
+       <p><span class="h6">Valor total: </span><span>R$ {{converteMoeda(valorTotal)}} </span></p>
       </div>
     </div>
   </div>  
@@ -60,6 +60,11 @@
 
         <form [ngClass]="{'was-validated': boletoForm.invalid}" [formGroup]="boletoForm" (ngSubmit)="salvarBoletos()">
 
+          <div class="mb-3" hidden>
+            <label for="id" class="form-label">Id:</label>
+            <input readonly formControlName="id" type="text" class="form-control" id="id" name="id">
+          </div>
+
           <div class="mb-3">
             <label for="descricao" class="form-label">Descrição:</label>
             <input formControlName="descricao" type="text" class="form-control" id="descricao" name="descricao" placeholder="Informe a descrição" required>
@@ -75,13 +80,12 @@
             <input formControlName="valor" required currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" type="text" class="form-control" id="valor" placeholder="Informe o valor">
           </div>
   
-          <div class="mb-3">
+          <div class="mb-3" *ngIf="boletoForm.get('id')?.value">
             <label for="status" class="form-label">Status:</label>
             <select class="form-control" required formControlName="status" id="status" name="status">
                <option value="" disabled selected>Selecione uma opção</option>
                <option value="0">Pago</option>
                <option value="1">Aguardando pagamento</option>
-               <option value="2">Vencido</option>
             </select>
           </div>
 

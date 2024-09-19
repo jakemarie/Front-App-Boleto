@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { BoletoService } from '../../service/boleto.service';
-import { Boleto } from '../../model/boleto';
+import { Boleto } from '../../model/Boleto';
 
 @Component({
   selector: 'app-boleto',
@@ -12,9 +12,12 @@ export class BoletoComponent implements OnInit {
 
   dataAtual: any;
   boletoList: Boleto[] = [];
+  labelChecked: string = "Marque pra visualizar todos boletos.";
+  valorTotal: any = 0;
 
   boletoForm = this.fb.group(
     {
+      id: [],
       descricao: [null, Validators.required],
       vencimento: [null, Validators.required],
       valor: [null, Validators.required],
@@ -22,7 +25,7 @@ export class BoletoComponent implements OnInit {
     }
   )
 
-  constructor(private fb: FormBuilder, private boletoService: BoletoService) { }
+  constructor(private fb: FormBuilder, private boletoService: BoletoService, ) { }
 
   ngOnInit() {
     this.dataAtual = new Date().toISOString().slice(0, 10); 
@@ -44,6 +47,12 @@ export class BoletoComponent implements OnInit {
     this.boletoService.buscarBoletoPorDataAtual().subscribe({
       next: (res) => {
         this.boletoList = res.dados
+        this.valorTotal = 0
+
+        this.boletoList.forEach(boleto => {
+          this.valorTotal += boleto.valor;
+        });
+
       },
       error: (error) =>{
         console.log(error)
@@ -54,7 +63,13 @@ export class BoletoComponent implements OnInit {
   buscarTodosBoleto() {
     this.boletoService.buscarTodosBoletos().subscribe({
       next: (res) => {
+      
         this.boletoList = res.dados
+        this.valorTotal = 0
+
+        this.boletoList.forEach(boleto => {
+          this.valorTotal += boleto.valor;
+        });
       },
       error: (error) =>{
         console.log(error)
@@ -66,6 +81,7 @@ export class BoletoComponent implements OnInit {
     this.boletoService.deletarBoleto(id).subscribe({
       next: (res) => {
         this.boletoList = res.dados
+        
       },
       error: (error) =>{
         console.log(error)
@@ -104,6 +120,31 @@ export class BoletoComponent implements OnInit {
         console.log(error)
       }
     })
+  }
+
+  converteMoeda(value: any) {
+    return value.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }
+
+  corStatusTable(status: string) {
+    if(status == "Pago") {
+      return 'table-success'
+    }
+
+    if(status == "Vencido") {
+      return'table-danger'
+    }
+    return ""
+  } 
+
+  alternarBuscarBoletos(value: any) {
+    if(value.target.checked) {
+      this.buscarTodosBoleto();
+      this.labelChecked = "Desmarque para visualizar os boletos a serem pagos hoje."
+    } else {
+      this.buscarBoletoPorDataAtual();
+      this.labelChecked = "Marque para visualizar todos boletos."
+    }
   }
 
 }
