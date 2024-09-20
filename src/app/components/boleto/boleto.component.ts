@@ -14,6 +14,8 @@ export class BoletoComponent implements OnInit {
   boletoList: Boleto[] = [];
   labelChecked: string = "Marque pra visualizar todos boletos.";
   valorTotal: any = 0;
+  boletoId: any;
+  boletoDescricao: any;
 
   boletoForm = this.fb.group(
     {
@@ -81,7 +83,7 @@ export class BoletoComponent implements OnInit {
     this.boletoService.deletarBoleto(id).subscribe({
       next: (res) => {
         this.boletoList = res.dados
-        
+        //colocar mensagem de excluir.
       },
       error: (error) =>{
         console.log(error)
@@ -145,6 +147,11 @@ export class BoletoComponent implements OnInit {
       this.buscarBoletoPorDataAtual();
       this.labelChecked = "Marque para visualizar todos boletos."
     }
+  }
+  
+  setBoleto(id: any, descricao: any) {
+    this.boletoId = id;
+    this.boletoDescricao = descricao;
   }
 
 }
