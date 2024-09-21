@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-  <div class="card" style="width: 95%;">
+  <div class="card" style="width: 95%; min-height: 500px;">
     <div class="card-body">
       <h3 class="card-title text-center mt-0 m-4">Boletos Diários</h3>
       <div class="row">
@@ -13,38 +13,40 @@
             data-bs-target="#staticBackdrop"> + Novo Boleto</button>
         </div>
       </div>
-      <table class="table table-hover">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col">id</th>
-            <th scope="col" class="w-50">Descrição</th>
-            <th scope="col">Vencimento</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Status</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="{{corStatusTable(boleto.status)}}" *ngFor="let boleto of boletoList">
-            <th scope="row">{{boleto.id}}</th>
-            <td>{{boleto.descricao}}</td>
-            <td>{{boleto.vencimento | date:'dd/MM/yyyy'}}</td>
-            <td>R$ {{converteMoeda(boleto.valor)}}</td>
-            <td>{{boleto.status}}</td>
-            <td class="text-end p-1">
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop">
-                <span class="material-symbols-outlined">edit_document</span>
-              </button>
-              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir" data-bs-toggle="modal"
-                data-bs-target="#excluirModal" (click)="setBoleto(boleto.id, boleto.descricao)">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-            </td>
-          </tr>
-
-        </tbody>
-      </table>
+      <div style="max-height:400px; overflow-y:auto;" >
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col" class="w-50">Descrição</th>
+              <th scope="col">Vencimento</th>
+              <th scope="col">Valor</th>
+              <th scope="col">Status</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="{{corStatusTable(statusVenvimento(boleto.status, boleto.vencimento))}}" *ngFor="let boleto of boletoList">
+              <th scope="row">{{boleto.id}}</th>
+              <td>{{boleto.descricao}}</td>
+              <td>{{boleto.vencimento | date:'dd/MM/yyyy'}}</td>
+              <td>R$ {{converteMoeda(boleto.valor)}}</td>
+              <td>{{statusVenvimento(boleto.status, boleto.vencimento)}}</td>
+              <td class="text-end p-1">
+                <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop" (click)="buscarBoletoPorId(boleto.id)">
+                  <span class="material-symbols-outlined">edit_document</span>
+                </button>
+                <button type="button" class="btn btn-danger p-1 me-1" title="Excluir" data-bs-toggle="modal"
+                  data-bs-target="#excluirModal" (click)="setBoleto(boleto.id, boleto.descricao)">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </td>
+            </tr>
+  
+          </tbody>
+        </table>
+      </div>
       <div class="text-end col">
         <p><span class="h6">Valor total: </span><span>R$ {{converteMoeda(valorTotal)}} </span></p>
       </div>
@@ -97,7 +99,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Salvar</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </form>
@@ -121,14 +123,5 @@
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Não</button>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
-  <div class="d-flex">
-    <div class="toast-body">
-      Hello, world! This is a toast message.
-    </div>
-    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
 </div>

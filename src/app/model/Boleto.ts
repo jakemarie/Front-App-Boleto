@@ -1,5 +1,5 @@
 export interface Boleto {
-    id?: number;
+    id?: number | null;
     descricao: string,
     vencimento: Date,
     valor: string,

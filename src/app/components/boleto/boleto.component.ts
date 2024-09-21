@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { BoletoService } from '../../service/boleto.service';
 import { Boleto } from '../../model/Boleto';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-boleto',
@@ -10,39 +11,54 @@ import { Boleto } from '../../model/Boleto';
 })
 export class BoletoComponent implements OnInit {
 
-  dataAtual: any;
+  dataAtual: any = new Date().toISOString().slice(0, 10);
   boletoList: Boleto[] = [];
   labelChecked: string = "Marque pra visualizar todos boletos.";
+  checkedList: boolean = false;
   valorTotal: any = 0;
   boletoId: any;
   boletoDescricao: any;
 
   boletoForm = this.fb.group(
     {
-      id: [],
-      descricao: [null, Validators.required],
-      vencimento: [null, Validators.required],
-      valor: [null, Validators.required],
+      id: [null as any],
+      descricao: ['', Validators.required],
+      vencimento: [null as any, Validators.required],
+      valor: [null as any, Validators.required],
       status: new FormControl('')
     }
   )
 
-  constructor(private fb: FormBuilder, private boletoService: BoletoService, ) { }
+  constructor(private fb: FormBuilder, private boletoService: BoletoService, private toastr: ToastrService ) { }
 
   ngOnInit() {
-    this.dataAtual = new Date().toISOString().slice(0, 10); 
+    console.log(this.dataAtual)
     this.buscarBoletoPorDataAtual();
   }
 
   salvarBoletos() {
     if(this.boletoForm.valid) {
-      console.log(this.boletoForm)
+      if(this.boletoForm.get('id')?.value) {
+        this.editarBoleto(this.criarBoleto());
+      } else {
+        this.boletoForm.get('status')?.setValue('1')
+        this.salvarBoleto(this.criarBoleto())
+      }
+      this.boletoForm.reset()
     } else {
-      console.log("Formulario inválido")
-      console.log(this.boletoForm.value)
       return;
     }
     
+  }
+
+  criarBoleto(): Boleto {
+    return {
+      id: this.boletoForm.get('id')?.value ?? 0,
+      descricao: this.boletoForm.get('descricao')?.value ?? "",
+      vencimento: this.boletoForm.get('vencimento')?.value ?? new Date(),
+      valor: this.boletoForm.get('valor')?.value ?? "",
+      status: this.boletoForm.get('status')?.value ?? ""
+    }
   }
 
   buscarBoletoPorDataAtual() {
@@ -57,7 +73,7 @@ export class BoletoComponent implements OnInit {
 
       },
       error: (error) =>{
-        console.log(error)
+        this.toastr.error(error,'Erro')
       }
     })
   }
@@ -74,7 +90,7 @@ export class BoletoComponent implements OnInit {
         });
       },
       error: (error) =>{
-        console.log(error)
+        this.toastr.error(error,'Erro')
       }
     })
   }
@@ -82,22 +98,32 @@ export class BoletoComponent implements OnInit {
   deletarBoleto(id: any) {
     this.boletoService.deletarBoleto(id).subscribe({
       next: (res) => {
-        this.boletoList = res.dados
-        //colocar mensagem de excluir.
+        if(this.checkedList) {
+          this.buscarTodosBoleto();
+        } else {
+          this.buscarBoletoPorDataAtual();
+        }
+        this.toastr.success('Boleto excluído com sucesso!','Sucesso')
       },
-      error: (error) =>{
-        console.log(error)
+       error: (error) =>{
+        this.toastr.error(error,'Erro')
       }
-    })
+    })  
+    
   }
 
   salvarBoleto(boleto: Boleto) {
     this.boletoService.salvarBoleto(boleto).subscribe({
       next: (res) => {
-        this.boletoList = res.dados
+        if(this.checkedList) {
+          this.buscarTodosBoleto();
+        } else {
+          this.buscarBoletoPorDataAtual();
+        }
+        this.toastr.success('Boleto salvo com sucesso!','Sucesso')
       },
       error: (error) =>{
-        console.log(error)
+        this.toastr.error(error,'Erro')
       }
     })
   }
@@ -105,10 +131,15 @@ export class BoletoComponent implements OnInit {
   editarBoleto(boleto: Boleto) {
     this.boletoService.editararBoleto(boleto).subscribe({
       next: (res) => {
-        this.boletoList = res.dados
+        if(this.checkedList) {
+          this.buscarTodosBoleto();
+        } else {
+          this.buscarBoletoPorDataAtual();
+        }
+        this.toastr.success('Boleto editado com sucesso!','Sucesso')
       },
       error: (error) =>{
-        console.log(error)
+        this.toastr.error(error,'Erro')
       }
     })
   }
@@ -116,10 +147,14 @@ export class BoletoComponent implements OnInit {
   buscarBoletoPorId(id: any) {
     this.boletoService.buscarBoletoPorId(id).subscribe({
       next: (res) => {
-        console.log(res.dados)
+        this.boletoForm.get('id')?.setValue(res.dados.id)
+        this.boletoForm.get('descricao')?.setValue(res.dados.descricao)
+        this.boletoForm.get('vencimento')?.setValue(res.dados.vencimento.toString().slice(0, 10))
+        this.boletoForm.get('valor')?.setValue(res.dados.valor)
+        this.boletoForm.get('status')?.setValue(res.dados.status == 'Pago' ? '0' : '1')
       },
       error: (error) =>{
-        console.log(error)
+        this.toastr.error(error,'Erro')
       }
     })
   }
@@ -140,6 +175,7 @@ export class BoletoComponent implements OnInit {
   } 
 
   alternarBuscarBoletos(value: any) {
+    this.checkedList = value.target.checked
     if(value.target.checked) {
       this.buscarTodosBoleto();
       this.labelChecked = "Desmarque para visualizar os boletos a serem pagos hoje."
@@ -152,6 +188,16 @@ export class BoletoComponent implements OnInit {
   setBoleto(id: any, descricao: any) {
     this.boletoId = id;
     this.boletoDescricao = descricao;
+  }
+
+  statusVenvimento(status: any, data: Date) {
+    const dataAtualMenosUm = new Date()
+    dataAtualMenosUm.setDate(dataAtualMenosUm.getDate() - 1)
+
+    if(status == "AguardandoPagamento" && new Date(data).toISOString().slice(0, 10) == dataAtualMenosUm.toISOString().slice(0, 10)) {
+      return "Vencido"
+    }
+    return status;
   }
 
 }
