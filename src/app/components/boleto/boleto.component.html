@@ -1,65 +1,70 @@
 <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-  <div class="card" style="width: 95%;">
+  <div class="card" style="width: 95%; min-height: 500px;">
     <div class="card-body">
       <h3 class="card-title text-center mt-0 m-4">Boletos Diários</h3>
       <div class="row">
         <div class="text-start col mt-2">
-          <input (click)="alternarBuscarBoletos($event)" class="form-check-input me-1 border border-black" type="checkbox" id="gridCheck" name="gridCheck">
+          <input (click)="alternarBuscarBoletos($event)" class="form-check-input me-1 border border-black"
+            type="checkbox" id="gridCheck" name="gridCheck">
           <label class="form-check-label" for="gridCheck">{{labelChecked}}</label>
         </div>
         <div class="text-end col">
-          <button type="button" class="btn btn-success m-1" title="Adicionar novo Boleto" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> + Novo Boleto</button>
+          <button type="button" class="btn btn-success m-1" title="Adicionar novo Boleto" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"> + Novo Boleto</button>
         </div>
       </div>
-      <table class="table table-hover">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col">id</th>
-            <th scope="col" class="w-50">Descrição</th>
-            <th scope="col">Vencimento</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Status</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="{{corStatusTable(boleto.status)}}" *ngFor="let boleto of boletoList">
-            <th scope="row">{{boleto.id}}</th>
-            <td>{{boleto.descricao}}</td>
-            <td>{{boleto.vencimento | date:'dd/MM/yyyy'}}</td>
-            <td>R$ {{converteMoeda(boleto.valor)}}</td>
-            <td>{{boleto.status}}</td>
-            <td class="text-end p-1"> 
-              <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                <span class="material-symbols-outlined">edit_document</span>
-              </button>
-              <button type="button" class="btn btn-danger p-1 me-1" title="Excluir">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-            </td>
-          </tr>
-
-        </tbody>
-      </table>
+      <div style="max-height:400px; overflow-y:auto;" >
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col" class="w-50">Descrição</th>
+              <th scope="col">Vencimento</th>
+              <th scope="col">Valor</th>
+              <th scope="col">Status</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="{{corStatusTable(statusVenvimento(boleto.status, boleto.vencimento))}}" *ngFor="let boleto of boletoList">
+              <th scope="row">{{boleto.id}}</th>
+              <td>{{boleto.descricao}}</td>
+              <td>{{boleto.vencimento | date:'dd/MM/yyyy'}}</td>
+              <td>R$ {{converteMoeda(boleto.valor)}}</td>
+              <td>{{statusVenvimento(boleto.status, boleto.vencimento)}}</td>
+              <td class="text-end p-1">
+                <button type="button" class="btn btn-warning p-1 me-1" title="Editar" data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop" (click)="buscarBoletoPorId(boleto.id)">
+                  <span class="material-symbols-outlined">edit_document</span>
+                </button>
+                <button type="button" class="btn btn-danger p-1 me-1" title="Excluir" data-bs-toggle="modal"
+                  data-bs-target="#excluirModal" (click)="setBoleto(boleto.id, boleto.descricao)">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </td>
+            </tr>
+  
+          </tbody>
+        </table>
+      </div>
       <div class="text-end col">
-       <p><span class="h6">Valor total: </span><span>R$ {{converteMoeda(valorTotal)}} </span></p>
+        <p><span class="h6">Valor total: </span><span>R$ {{converteMoeda(valorTotal)}} </span></p>
       </div>
     </div>
-  </div>  
+  </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Cadastro Boletos</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-
-        <form [ngClass]="{'was-validated': boletoForm.invalid}" [formGroup]="boletoForm" (ngSubmit)="salvarBoletos()">
-
+      <form [ngClass]="{'was-validated': boletoForm.invalid}" [formGroup]="boletoForm" (ngSubmit)="salvarBoletos()">
+        <div class="modal-body">
           <div class="mb-3" hidden>
             <label for="id" class="form-label">Id:</label>
             <input readonly formControlName="id" type="text" class="form-control" id="id" name="id">
@@ -67,36 +72,56 @@
 
           <div class="mb-3">
             <label for="descricao" class="form-label">Descrição:</label>
-            <input formControlName="descricao" type="text" class="form-control" id="descricao" name="descricao" placeholder="Informe a descrição" required>
+            <input formControlName="descricao" type="text" class="form-control" id="descricao" name="descricao"
+              placeholder="Informe a descrição" required>
           </div>
-  
+
           <div class="mb-3">
             <label for="vencimento" class="form-label">Vencimento:</label>
-            <input formControlName="vencimento" required type="date" min="{{dataAtual}}" class="form-control" id="vencimento" placeholder="Another input placeholder">
+            <input formControlName="vencimento" required type="date" min="{{dataAtual}}" class="form-control"
+              id="vencimento" placeholder="Another input placeholder">
           </div>
-  
+
           <div class="mb-3">
             <label for="valor" class="form-label">Valor:</label>
-            <input formControlName="valor" required currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" type="text" class="form-control" id="valor" placeholder="Informe o valor">
+            <input formControlName="valor" required currencyMask
+              [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" type="text"
+              class="form-control" id="valor" placeholder="Informe o valor">
           </div>
-  
+
           <div class="mb-3" *ngIf="boletoForm.get('id')?.value">
             <label for="status" class="form-label">Status:</label>
             <select class="form-control" required formControlName="status" id="status" name="status">
-               <option value="" disabled selected>Selecione uma opção</option>
-               <option value="0">Pago</option>
-               <option value="1">Aguardando pagamento</option>
+              <option value="" disabled selected>Selecione uma opção</option>
+              <option value="0">Pago</option>
+              <option value="1">Aguardando pagamento</option>
             </select>
           </div>
-
+        </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Salvar</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </form>
-        
     </div>
   </div>
 </div>
 
-
+<!-- Modal Excluir -->
+<div class="modal fade" id="excluirModal" tabindex="-1" aria-labelledby="excluirModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="excluirModalLabel">Exclusão</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Deseja realmente excluir o boleto {{boletoDescricao}}?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="deletarBoleto(boletoId)">Sim</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Não</button>
+      </div>
+    </div>
+  </div>
+</div>

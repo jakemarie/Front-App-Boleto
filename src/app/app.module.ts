@@ -7,6 +7,7 @@ import { BoletoComponent } from './components/boleto/boleto.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -20,7 +21,10 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     CurrencyMaskModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot({
+      
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
