@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class BoletoComponent implements OnInit {
 
-  dataAtual: any = new Date().toISOString().slice(0, 10);
+  dataAtual: any = this.formatarData(new Date());
   boletoList: Boleto[] = [];
   labelChecked: string = "Marque pra visualizar todos boletos.";
   checkedList: boolean = false;
@@ -196,13 +196,21 @@ export class BoletoComponent implements OnInit {
     const dataAtualMenosUm = new Date()
     dataAtualMenosUm.setDate(dataAtualMenosUm.getDate() - 1)
 
-    if(status == "AguardandoPagamento" && new Date(data).toISOString().slice(0, 10) == dataAtualMenosUm.toISOString().slice(0, 10)) {
+    if(status == "AguardandoPagamento" && this.formatarData(new Date(data)) == this.formatarData(dataAtualMenosUm)) {
       return "Vencido"
     }
     if(status == "AguardandoPagamento") {
       return "Aguardando Pagamento"
     }
     return status;
+  }
+
+  formatarData(data: Date): string {
+    const ano = data.getFullYear();
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0'); // +1 pois o mês começa em 0
+    const dia = data.getDate().toString().padStart(2, '0');
+  
+    return `${ano}-${mes}-${dia}`;
   }
 
 }
