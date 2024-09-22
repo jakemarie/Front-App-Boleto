@@ -18,6 +18,7 @@ export class BoletoComponent implements OnInit {
   valorTotal: any = 0;
   boletoId: any;
   boletoDescricao: any;
+  labelModal: string = "Cadastro Boleto";
 
   boletoForm = this.fb.group(
     {
@@ -147,6 +148,7 @@ export class BoletoComponent implements OnInit {
   buscarBoletoPorId(id: any) {
     this.boletoService.buscarBoletoPorId(id).subscribe({
       next: (res) => {
+        this.labelModal = "Edição Boleto"
         this.boletoForm.get('id')?.setValue(res.dados.id)
         this.boletoForm.get('descricao')?.setValue(res.dados.descricao)
         this.boletoForm.get('vencimento')?.setValue(res.dados.vencimento.toString().slice(0, 10))
@@ -196,6 +198,9 @@ export class BoletoComponent implements OnInit {
 
     if(status == "AguardandoPagamento" && new Date(data).toISOString().slice(0, 10) == dataAtualMenosUm.toISOString().slice(0, 10)) {
       return "Vencido"
+    }
+    if(status == "AguardandoPagamento") {
+      return "Aguardando Pagamento"
     }
     return status;
   }
