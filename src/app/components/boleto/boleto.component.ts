@@ -196,7 +196,7 @@ export class BoletoComponent implements OnInit {
     const dataAtualMenosUm = new Date()
     dataAtualMenosUm.setDate(dataAtualMenosUm.getDate() - 1)
 
-    if(status == "AguardandoPagamento" && this.formatarData(new Date(data)) == this.formatarData(dataAtualMenosUm)) {
+    if(status == "AguardandoPagamento" && (dataAtualMenosUm.getTime() > new Date(data).getTime())) {
       return "Vencido"
     }
     if(status == "AguardandoPagamento") {
@@ -207,7 +207,7 @@ export class BoletoComponent implements OnInit {
 
   formatarData(data: Date): string {
     const ano = data.getFullYear();
-    const mes = (data.getMonth() + 1).toString().padStart(2, '0'); // +1 pois o mês começa em 0
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0'); 
     const dia = data.getDate().toString().padStart(2, '0');
   
     return `${ano}-${mes}-${dia}`;
